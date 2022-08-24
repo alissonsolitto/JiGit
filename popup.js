@@ -1,21 +1,43 @@
 window.onload = function () {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-
     let urlTab = new URL(tabs[0].url);
+    let urlApi = createGetIssueUrl(urlTab);
+    if (urlApi) {
+      // Get data
+      fetch(urlApi)
+        .then(function (response) {
+          response.json().then(function (issueData) {
+            let branchType = document.getElementById("branch-type");
+            branchType.value = issueData.fields.issuetype.name == "Bug" ? "hotfix" : "feature";
+            document.getElementById("branch-type-text").innerHTML = branchType.value.concat("/");
 
-    chrome.runtime.sendMessage({ action: "get-issue-data", url: urlTab }, (issueData) => {
-      let branchType = document.getElementById("branch-type");
-      branchType.value = issueData.fields.issuetype.name == "Bug" ? "hotfix" : "feature";
-      document.getElementById("branch-type-text").innerHTML = branchType.value.concat("/");
+            let titleBranch = replaceSpecialChars(issueData.fields.summary).toLowerCase();
+            document.getElementById("branch-name").value = issueData.key.concat('-', titleBranch);
 
-      let titleBranch = replaceSpecialChars(issueData.fields.summary).toLowerCase();
-      document.getElementById("branch-name").value = issueData.key.concat('-', titleBranch);
-
-      let linkIssue = document.getElementById("link-issue");
-      linkIssue.href = `${urlTab.origin}/browse/${issueData.key}`;
-      linkIssue.innerHTML = issueData.key;
-    });
+            let linkIssue = document.getElementById("link-issue");
+            linkIssue.href = `${urlTab.origin}/browse/${issueData.key}`;
+            linkIssue.innerHTML = issueData.key;
+          });
+        })
+        .catch(function (error) {
+          console.log('There has been a problem with your get data issue operation: ' + error.message);
+        });
+    }
   });
+}
+
+function createGetIssueUrl(url) {
+  let urlTab = new URL(url);
+  let isJiraTaskPage = urlTab.pathname.startsWith("/browse/");
+  let selectedIssue = (new URLSearchParams(urlTab.search)).get("selectedIssue");
+
+  if (selectedIssue) {
+    return `${urlTab.origin}/rest/api/2/issue/${selectedIssue}`;
+  }
+  else if (isJiraTaskPage) {
+    let issueKey = urlTab.pathname.split("/")[2];
+    return `${urlTab.origin}/rest/api/2/issue/${issueKey}`;
+  }
 }
 
 // https://metring.com.br/javascript-substituir-caracteres-especiais
