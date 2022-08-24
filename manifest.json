@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Generator Branch",
   "description": "Default branching based on the title of stories in Jira",
   "version": "1.0.0",
@@ -10,15 +10,18 @@
     "128": "icon128.png"    
   },
   "permissions": [
-    "tabs",
-    "https://*/jira/*/*"
+    "tabs"
   ],  
-  "browser_action": {
+  "host_permissions": [
+    "https://*/jira/*/*",
+    "https://*/atlassian/*/*"
+  ],
+  "action": {
     "default_title": "Work only with jira issue pages",
     "default_icon": "icon32-off.png",
     "default_popup": "popup.html"
   },
   "background": {
-    "scripts": ["background.js"]
+    "service_worker": "background.js"
   }
 }
