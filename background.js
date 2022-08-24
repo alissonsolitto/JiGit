@@ -1,62 +1,21 @@
-chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason == "install") {
-    runSettingApp();
-  }
-});
+function isValidIssue(url) {
+    let urlTab = new URL(url);
+    let isJiraTaskPage = urlTab.pathname.startsWith("/browse/");
+    let selectedIssue = (new URLSearchParams(urlTab.search)).get("selectedIssue");
 
-chrome.browserAction.onClicked.addListener((tab) => {
-  chrome.tabs.sendMessage(tab.id, { action: "get_issue_name" });
-});
+    return selectedIssue || isJiraTaskPage;
+}
 
-chrome.runtime.onMessage.addListener((msg, sender) => {
-  if (msg.activeIcon === true) {
-    addActiveState(sender.tab.id);
-  }
-  if (msg.doneIcon === true) {
-    addDoneState(sender.tab.id);
-    setTimeout(() => addActiveState(sender.tab.id), 2000);
-  }
-});
-
-chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-  if (changeInfo.url) {
-    if (
-      changeInfo.url.match(
-        /(?=.*(\.atlassian\.net\/jira|jira.*))(?=.*\?selectedIssue\=).*|(.atlassian.net|jira.*)\/browse/g
-      )
-    ) {
-      addActiveState(tabId);
-    } else {
-      removeActiveState(tabId);
-    }
-  }
+chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+    isValidIssue(tab.url) ? addActiveState(tabId) : removeActiveState(tabId);    
 });
 
 function addActiveState(tabId) {
-  chrome.browserAction.setIcon({ tabId, path: "icon32-on.png" });
-  chrome.browserAction.setTitle({
-    title:
-      "Click to convert issue title to branch name and puts it on the clipboard",
-    tabId,
-  });
-}
-
-function addDoneState(tabId) {
-  chrome.browserAction.setIcon({ tabId, path: "icon32-done.png" });
-  chrome.browserAction.setTitle({
-    title: "Success :)",
-    tabId,
-  });
+    chrome.browserAction.setIcon({ tabId, path: "icon32-on.png" });
+    chrome.browserAction.setTitle({ tabId, title: "Click to convert issue title to branch" });
 }
 
 function removeActiveState(tabId) {
-  chrome.browserAction.setIcon({ tabId, path: "icon32-off.png" });
-  chrome.browserAction.setTitle({
-    title: "Work only with jira issue pages",
-    tabId,
-  });
-}
-
-function runSettingApp() {
-  chrome.tabs.create({ url: "options.html" });
+    chrome.browserAction.setIcon({ tabId, path: "icon32-off.png" });
+    chrome.browserAction.setTitle({ tabId, title: "Work only with jira issue pages" });
 }

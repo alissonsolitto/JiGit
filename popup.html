@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Generator Branch</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css"
+        integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        body {
+            height: 350px !important;
+            width: 550px !important;
+        }
+    </style>
+</head>
+
+<body style="padding: 0px 50px; justify-content: center; align-self: center;">
+    <div class="content" style="padding: 30px 0;">
+
+        <h3 class="mb-3">Generate branch <a id="link-issue" target="_blank"></a></h3>
+
+        <div class="form-group row">
+            <label for="branch-type" class="col-4 col-form-label pr-0">Branch type</label>
+            <div class="col-8">
+                <select id="branch-type" class="form-control">
+                    <option value="feature" selected="selected">Feature</option>
+                    <option value="hotfix">Hotfix</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="branch-from" class="col-4 col-form-label pr-0">Branch from</label>
+            <div class="col-8">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa-solid fa-code-branch"></i></div>
+                    </div>
+                    <select id="branch-from" class="form-control">
+                        <option value="develop" selected="selected">Develop</option>
+                        <option value="master">Master</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-12">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div id="branch-type-text" class="input-group-text">feature/</div>
+                    </div>
+                    <input type="text" class="form-control" id="branch-name">
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button id="btn-copy-command" type="button" class="btn btn-outline-primary"><i class="fa-solid fa-clipboard"></i> Command</button>
+            </div>
+            <div class="btn-group mr-2" role="group" aria-label="Second group">
+                <button id="btn-copy-branch-name" type="button" class="btn btn-outline-primary"><i class="fa-solid fa-clipboard"></i> Branch name</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

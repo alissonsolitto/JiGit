@@ -1,34 +1,24 @@
 {
   "manifest_version": 2,
-
-  "name": "JiGit - Jira issue title to branch name",
-  "description": "Сonverts Jira issue title to branch name and puts it on the clipboard",
-  "version": "0.0.0.6",
+  "name": "Generator Branch",
+  "description": "Default branching based on the title of stories in Jira",
+  "version": "1.0.0",
   "icons": {
     "16": "icon16.png",
+    "32": "icon32.png",
     "48": "icon48.png",
-    "128": "icon128.png"
+    "128": "icon128.png"    
   },
   "permissions": [
     "tabs",
-    "https://*/browse/*",
-    "https://*/jira/*/*",
-    "clipboardWrite",
-    "storage"
-  ],
+    "https://*/jira/*/*"
+  ],  
   "browser_action": {
     "default_title": "Work only with jira issue pages",
-    "default_icon": "icon32-off.png"
+    "default_icon": "icon32-off.png",
+    "default_popup": "popup.html"
   },
-  "content_scripts": [
-    {
-      "matches": ["https://*/browse/*", "https://*/jira/*/*"],
-      "js": ["contentscript.js"],
-      "run_at": "document_end"
-    }
-  ],
   "background": {
     "scripts": ["background.js"]
-  },
-  "options_page": "options.html"
+  }
 }
